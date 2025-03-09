@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "FuruSxXgqjGcGj1Y2OGzlOeYQViDnsCf48XexAY5GPs=",
+  "Source": "QwenChatBackend",
+  "BasePath": "_content/QwenChatBackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
