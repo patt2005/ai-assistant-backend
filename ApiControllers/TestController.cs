@@ -11,6 +11,6 @@ public class TestController : ControllerBase
     {
         string apiKey = Environment.GetEnvironmentVariable("OpenAiApiKey") ?? "No key was found";
         
-        return Ok(apiKey);
+        return Ok("hello api key");
     }
 }

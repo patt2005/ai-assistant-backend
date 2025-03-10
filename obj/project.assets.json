@@ -509,11 +509,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/petrugrigor/Documents/QwenBackend/src/QwenChatBackend/QwenChatBackend.csproj",
+      "projectUniqueName": "/Users/petrugrigor/Documents/ai-assistant-server/ai-assistant-backend/QwenChatBackend.csproj",
       "projectName": "QwenChatBackend",
-      "projectPath": "/Users/petrugrigor/Documents/QwenBackend/src/QwenChatBackend/QwenChatBackend.csproj",
+      "projectPath": "/Users/petrugrigor/Documents/ai-assistant-server/ai-assistant-backend/QwenChatBackend.csproj",
       "packagesPath": "/Users/petrugrigor/.nuget/packages/",
-      "outputPath": "/Users/petrugrigor/Documents/QwenBackend/src/QwenChatBackend/obj/",
+      "outputPath": "/Users/petrugrigor/Documents/ai-assistant-server/ai-assistant-backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/petrugrigor/.nuget/NuGet/NuGet.Config"
