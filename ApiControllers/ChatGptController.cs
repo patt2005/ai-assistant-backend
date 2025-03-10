@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using QwenChatBackend.Models;
 using QwenChatBackend.Services;
+using System;
 
 namespace QwenChatBackend.ApiControllers;
 
@@ -16,12 +17,17 @@ public class ChatGptController(ILogService logService) : ControllerBase
         Timeout = Timeout.InfiniteTimeSpan
     };
 
-    private const string ApiKey = "";
+    private string _apiKey = "";
     private const string ChatApiUrl = "https://api.openai.com/v1/chat/completions";
 
     [HttpPost("generate-audio")]
     public async Task<IActionResult> GenerateAudio()
     {
+        if (string.IsNullOrEmpty(_apiKey))
+        {
+            _apiKey = Environment.GetEnvironmentVariable("OpenAiApiKey");
+        }
+        
         await _logService.LogAsync(new Log
         {
             Method = "POST",
@@ -39,7 +45,7 @@ public class ChatGptController(ILogService logService) : ControllerBase
             Content = httpContent
         };
 
-        httpRequest.Headers.Add("Authorization", $"Bearer {ApiKey}");
+        httpRequest.Headers.Add("Authorization", $"Bearer {_apiKey}");
 
         var response = await client.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead);
 
@@ -56,6 +62,11 @@ public class ChatGptController(ILogService logService) : ControllerBase
     [HttpPost("chat")]
     public async Task Chat()
     {
+        if (string.IsNullOrEmpty(_apiKey))
+        {
+            _apiKey = Environment.GetEnvironmentVariable("OpenAiApiKey");
+        }
+        
         await _logService.LogAsync(new Log
         {
             Method = "POST",
@@ -71,7 +82,7 @@ public class ChatGptController(ILogService logService) : ControllerBase
             Content = httpContent
         };
 
-        httpRequest.Headers.Add("Authorization", $"Bearer {ApiKey}");
+        httpRequest.Headers.Add("Authorization", $"Bearer {_apiKey}");
 
         var response = await client.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead);
 

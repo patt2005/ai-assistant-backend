@@ -7,8 +7,7 @@ namespace QwenChatBackend.ApiControllers;
 [Route("api/grok")]
 public class GrockController : ControllerBase
 {
-    private readonly string apiKey =
-        "";
+    private string _apiKey = "";
     private const string QwenApiUrl = "https://api.x.ai/v1/chat/completions";
     
     private readonly HttpClient client = new HttpClient
@@ -19,6 +18,11 @@ public class GrockController : ControllerBase
     [HttpPost("chat")]
     public async Task Chat()
     {
+        if (string.IsNullOrEmpty(_apiKey))
+        {
+            _apiKey = Environment.GetEnvironmentVariable("GrokAiApiKey");
+        }
+        
         using var reader = new StreamReader(Request.Body, Encoding.UTF8);
         var requestBody = await reader.ReadToEndAsync();
 
@@ -29,7 +33,7 @@ public class GrockController : ControllerBase
             Content = httpContent
         };
 
-        httpRequest.Headers.Add("Authorization", $"Bearer {apiKey}");
+        httpRequest.Headers.Add("Authorization", $"Bearer {_apiKey}");
 
         var response = await client.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead);
 

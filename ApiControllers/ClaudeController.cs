@@ -16,14 +16,18 @@ public class ClaudeController(ILogService logService) : ControllerBase
         Timeout = Timeout.InfiniteTimeSpan
     };
 
-    private const string ApiKey =
-        "";
+    private string _apiKey = "";
 
     private const string QwenApiUrl = "https://api.anthropic.com/v1/messages";
 
     [HttpPost("chat")]
     public async Task Chat()
     {
+        if (string.IsNullOrEmpty(_apiKey))
+        {
+            _apiKey = Environment.GetEnvironmentVariable("ClaudeAiApiKey");
+        }
+        
         await _logService.LogAsync(new Log
         {
             Method = "POST",
@@ -40,7 +44,7 @@ public class ClaudeController(ILogService logService) : ControllerBase
             Content = httpContent
         };
 
-        httpRequest.Headers.Add("x-api-key", ApiKey);
+        httpRequest.Headers.Add("x-api-key", _apiKey);
         httpRequest.Headers.Add("anthropic-version", "2023-06-01");
 
         var response = await client.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead);

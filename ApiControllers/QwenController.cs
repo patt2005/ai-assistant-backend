@@ -14,12 +14,17 @@ public class QwenController(ILogService logService) : ControllerBase
         Timeout = TimeSpan.FromMinutes(5)
     };
 
-    private const string ApiKey = "";
+    private string _apiKey = "";
     private const string QwenApiUrl = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions";
 
     [HttpPost("chat")]
     public async Task Chat()
     {
+        if (string.IsNullOrEmpty(_apiKey))
+        {
+            _apiKey = Environment.GetEnvironmentVariable("QwenAiApiKey");
+        }
+        
         await _logService.LogAsync(new Log
         {
             Method = "POST",
@@ -36,7 +41,7 @@ public class QwenController(ILogService logService) : ControllerBase
             Content = httpContent
         };
 
-        httpRequest.Headers.Add("Authorization", $"Bearer {ApiKey}");
+        httpRequest.Headers.Add("Authorization", $"Bearer {_apiKey}");
 
         var response = await client.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead);
 
