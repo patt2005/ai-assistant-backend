@@ -7,7 +7,7 @@ steps:
       - '$_GCR_HOSTNAME/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA'
       - .
       - '-f'
-      - DockerFile
+      - Dockerfile
     id: Build
   - name: gcr.io/cloud-builders/docker
     args:
