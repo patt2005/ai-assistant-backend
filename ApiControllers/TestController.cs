@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace QwenChatBackend.ApiControllers;
 
@@ -8,6 +9,8 @@ public class TestController : ControllerBase
     [HttpGet("api/test")]
     public IActionResult Get()
     {
-        return Ok("Hello world!");
+        string apiKey = Environment.GetEnvironmentVariable("OpenAiApiKey") ?? "No key was found";
+        
+        return Ok(apiKey);
     }
 }
