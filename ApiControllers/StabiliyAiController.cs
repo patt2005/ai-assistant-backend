@@ -16,11 +16,16 @@ public class StabiliyAiController(ILogService logService) : ControllerBase
         Timeout = TimeSpan.FromMinutes(5)
     };
 
-    private const string ApiKey = "";
+    private string _apiKey = "";
     
     [HttpPost("generate-image")]
     public async Task<IActionResult> GenerateImage([FromQuery] string prompt, [FromQuery] string aspectRatio, [FromQuery] string style)
     {
+        if (string.IsNullOrEmpty(_apiKey))
+        {
+            _apiKey = Environment.GetEnvironmentVariable("StabilityAiApiKey");
+        }
+        
         await _logService.LogAsync(new Log
         {
             Method = "POST",
@@ -30,7 +35,7 @@ public class StabiliyAiController(ILogService logService) : ControllerBase
         var stabilityAiUrl = "https://api.stability.ai/v2beta/stable-image/generate/core";
 
         using var request = new HttpRequestMessage(HttpMethod.Post, stabilityAiUrl);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", ApiKey);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("image/*"));
         
         var boundary = $"Boundary-{Guid.NewGuid()}";

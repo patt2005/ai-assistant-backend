@@ -19,7 +19,7 @@ public class ChatGptController(ILogService logService) : ControllerBase
 
     private string _apiKey = "";
     private const string ChatApiUrl = "https://api.openai.com/v1/chat/completions";
-
+    
     [HttpPost("generate-audio")]
     public async Task<IActionResult> GenerateAudio()
     {
