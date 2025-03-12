@@ -76,6 +76,12 @@ public class StabiliyAiController(ILogService logService) : ControllerBase
         if (!response.IsSuccessStatusCode)
         {
             var errorMsg = await response.Content.ReadAsStringAsync();
+            await _logService.LogAsync(new Log
+            {
+                Method = "POST",
+                Endpoint = "/api/stability/generate-image",
+                ResponseBody = errorMsg, 
+            });
             return StatusCode((int)response.StatusCode, $"Error: {errorMsg}");
         }
 
