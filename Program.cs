@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Features;
 using QwenChatBackend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,14 +14,18 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<ILogService, LogService>();
 
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 100_000_000;
+    options.ValueLengthLimit = int.MaxValue;
+    options.BufferBody = false;
+});
+
 var app = builder.Build();
 
 // Configurează pipeline-ul HTTP
-// if (app.Environment.IsDevelopment())
-// {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-// }
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseRouting();
