@@ -21,26 +21,46 @@ public class FileController : ControllerBase
     public async Task<IActionResult> UploadFile(IFormFile file)
     {
         if (file == null || file.Length == 0)
-        {
             return BadRequest("File is empty or missing");
-        }
-        
+
         var client = StorageClient.Create(_credential);
-    
-        using var stream = file.OpenReadStream() ;
-        var obj = await client.UploadObjectAsync(_bucketName, file.FileName, file.ContentType, stream);
+
+        using var stream = file.OpenReadStream();
+        
+        var contentType = string.IsNullOrWhiteSpace(file.ContentType)
+            ? GetContentType(file.FileName)
+            : file.ContentType;
+
+        var obj = await client.UploadObjectAsync(_bucketName, file.FileName, contentType, stream);
 
         return Ok(new { message = "File uploaded successfully!", fileName = obj.Name });
+    }
+    
+    private string GetContentType(string fileName)
+    {
+        var ext = Path.GetExtension(fileName).ToLowerInvariant();
+        return ext switch
+        {
+            ".png" => "image/png",
+            ".jpg" => "image/jpeg",
+            ".jpeg" => "image/jpeg",
+            ".gif" => "image/gif",
+            _ => "application/octet-stream"
+        };
     }
     
     [HttpGet("get-file")]
     public async Task<IActionResult> GetFile(string fileName)
     {
         var client = StorageClient.Create(_credential);
+
         var stream = new MemoryStream();
-        var obj = await client.DownloadObjectAsync(_bucketName, fileName, stream);
+        await client.DownloadObjectAsync(_bucketName, fileName, stream);
         stream.Position = 0;
-        
-        return File(stream, obj.ContentType, obj.Name);
+
+        var contentType = GetContentType(fileName);
+        Response.Headers["Content-Disposition"] = "inline";
+
+        return File(stream, contentType);
     }
 }
