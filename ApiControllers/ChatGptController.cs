@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using QwenChatBackend.Models;
 using QwenChatBackend.Services;
 using System;
+using Newtonsoft.Json.Linq;
 
 namespace QwenChatBackend.ApiControllers;
 
@@ -66,16 +67,22 @@ public class ChatGptController(ILogService logService) : ControllerBase
         {
             _apiKey = Environment.GetEnvironmentVariable("OpenAiApiKey");
         }
-        
+
         await _logService.LogAsync(new Log
         {
             Method = "POST",
             Endpoint = "/api/chatgpt/chat"
         });
+
         using var reader = new StreamReader(Request.Body, Encoding.UTF8);
         var requestBody = await reader.ReadToEndAsync();
+        
+        var json = JObject.Parse(requestBody);
+        json["model"] = "gpt-4o-mini";
+        
+        var modifiedRequestBody = json.ToString();
 
-        var httpContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+        var httpContent = new StringContent(modifiedRequestBody, Encoding.UTF8, "application/json");
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, ChatApiUrl)
         {

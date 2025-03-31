@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QwenChatBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+042495ed655ef4ea983ae60c2f04fec9450417cd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+16dbd2c5dc0f638f14ccf4a8153fbcafd56af16c")]
 [assembly: System.Reflection.AssemblyProductAttribute("QwenChatBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QwenChatBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
