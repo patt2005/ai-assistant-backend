@@ -7,25 +7,26 @@ namespace QwenChatBackend.ApiControllers;
 
 [ApiController]
 [Route("api/stability")]
-public class StabiliyAiController(ILogService logService) : ControllerBase
+public class StabiliyAiController : ControllerBase
 {
-    private readonly ILogService _logService = logService;
+    private readonly ILogService _logService;
 
     private readonly HttpClient client = new HttpClient
     {
         Timeout = TimeSpan.FromMinutes(5)
     };
 
-    private string _apiKey = "";
+    private readonly string _apiKey;
+
+    public StabiliyAiController(ILogService logService)
+    {
+        _logService = logService;
+        _apiKey = Environment.GetEnvironmentVariable("StabilityAiApiKey");
+    }
     
     [HttpPost("generate-image")]
     public async Task<IActionResult> GenerateImage([FromQuery] string prompt, [FromQuery] string aspectRatio, [FromQuery] string style)
     {
-        if (string.IsNullOrEmpty(_apiKey))
-        {
-            _apiKey = Environment.GetEnvironmentVariable("StabilityAiApiKey");
-        }
-        
         await _logService.LogAsync(new Log
         {
             Method = "POST",

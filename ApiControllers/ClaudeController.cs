@@ -7,27 +7,28 @@ namespace QwenChatBackend.ApiControllers;
 
 [ApiController]
 [Route("api/claude")]
-public class ClaudeController(ILogService logService) : ControllerBase
+public class ClaudeController : ControllerBase
 {
-    private readonly ILogService _logService = logService;
+    private readonly ILogService _logService;
 
     private readonly HttpClient client = new HttpClient
     {
         Timeout = Timeout.InfiniteTimeSpan
     };
 
-    private string _apiKey = "";
+    public ClaudeController(ILogService logService)
+    {
+        _apiKey = Environment.GetEnvironmentVariable("ClaudeAiApiKey");
+        _logService = logService;
+    }
+
+    private readonly string _apiKey;
 
     private const string QwenApiUrl = "https://api.anthropic.com/v1/messages";
 
     [HttpPost("chat")]
     public async Task Chat()
     {
-        if (string.IsNullOrEmpty(_apiKey))
-        {
-            _apiKey = Environment.GetEnvironmentVariable("ClaudeAiApiKey");
-        }
-        
         await _logService.LogAsync(new Log
         {
             Method = "POST",

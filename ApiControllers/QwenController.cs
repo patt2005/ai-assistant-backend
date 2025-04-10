@@ -5,26 +5,27 @@ using System.Text;
 
 [ApiController]
 [Route("api/qwen")]
-public class QwenController(ILogService logService) : ControllerBase
+public class QwenController : ControllerBase
 {
-    private readonly ILogService _logService = logService;
+    private readonly ILogService _logService;
 
     private readonly HttpClient client = new HttpClient
     {
         Timeout = TimeSpan.FromMinutes(5)
     };
 
-    private string _apiKey = "";
+    public QwenController(ILogService logService)
+    {
+        _apiKey = Environment.GetEnvironmentVariable("QwenAiApiKey");
+        _logService = logService;
+    }
+
+    private readonly string _apiKey;
     private const string QwenApiUrl = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions";
 
     [HttpPost("chat")]
     public async Task Chat()
     {
-        if (string.IsNullOrEmpty(_apiKey))
-        {
-            _apiKey = Environment.GetEnvironmentVariable("QwenAiApiKey");
-        }
-        
         await _logService.LogAsync(new Log
         {
             Method = "POST",
