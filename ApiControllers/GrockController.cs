@@ -25,6 +25,10 @@ public class GrockController : ControllerBase
     {
         using var reader = new StreamReader(Request.Body, Encoding.UTF8);
         var requestBody = await reader.ReadToEndAsync();
+        
+        Console.WriteLine("--------------------------------------------");
+        Console.WriteLine(requestBody);
+        Console.WriteLine("--------------------------------------------");
 
         var httpContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
