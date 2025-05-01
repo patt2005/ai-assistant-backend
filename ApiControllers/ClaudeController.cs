@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using QwenChatBackend.Models;
 using QwenChatBackend.Services;
 
@@ -37,12 +38,17 @@ public class ClaudeController : ControllerBase
         
         using var reader = new StreamReader(Request.Body, Encoding.UTF8);
         var requestBody = await reader.ReadToEndAsync();
+        
+        var json = JObject.Parse(requestBody);
+        json["model"] = "claude-3-5-haiku-20241022";
+        
+        var modifiedRequestBody = json.ToString();
 
         Console.WriteLine("--------------------------------------------");
         Console.WriteLine(requestBody);
         Console.WriteLine("--------------------------------------------");
 
-        var httpContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+        var httpContent = new StringContent(modifiedRequestBody, Encoding.UTF8, "application/json");
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, QwenApiUrl)
         {
