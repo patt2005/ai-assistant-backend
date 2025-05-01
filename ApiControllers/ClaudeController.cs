@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using QwenChatBackend.Models;
 using QwenChatBackend.Services;
@@ -19,13 +20,14 @@ public class ClaudeController : ControllerBase
 
     public ClaudeController(ILogService logService)
     {
-        _apiKey = Environment.GetEnvironmentVariable("ClaudeAiApiKey");
+        // _apiKey = Environment.GetEnvironmentVariable("ClaudeAiApiKey");
+        _apiKey = Environment.GetEnvironmentVariable("OpenAiApiKey");
         _logService = logService;
     }
 
     private readonly string _apiKey;
 
-    private const string QwenApiUrl = "https://api.anthropic.com/v1/messages";
+    private const string QwenApiUrl = "https://api.openai.com/v1/chat/completions";
 
     [HttpPost("chat")]
     public async Task Chat()
@@ -40,8 +42,22 @@ public class ClaudeController : ControllerBase
         var requestBody = await reader.ReadToEndAsync();
         
         var json = JObject.Parse(requestBody);
-        json["model"] = "claude-3-5-haiku-20241022";
+        json["model"] = "gpt-4o-mini";
         
+        if (json["messages"] is JArray messagesArray)
+        {
+            var system = messagesArray.FirstOrDefault(m => m["role"]?.ToString() == "system");
+            var recent = new JArray(messagesArray
+                .Where(m => m["role"]?.ToString() != "system")
+                .TakeLast(10));
+        
+            var finalMessages = new JArray();
+            if (system != null) finalMessages.Add(system);
+            foreach (var m in recent) finalMessages.Add(m);
+        
+            json["messages"] = finalMessages;
+        }
+
         var modifiedRequestBody = json.ToString();
 
         Console.WriteLine("--------------------------------------------");
@@ -55,8 +71,7 @@ public class ClaudeController : ControllerBase
             Content = httpContent
         };
 
-        httpRequest.Headers.Add("x-api-key", _apiKey);
-        httpRequest.Headers.Add("anthropic-version", "2023-06-01");
+        httpRequest.Headers.Add("Authorization", $"Bearer {_apiKey}");
 
         var response = await client.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead);
 
@@ -77,9 +92,38 @@ public class ClaudeController : ControllerBase
         while (!responseReader.EndOfStream)
         {
             var line = await responseReader.ReadLineAsync();
-            if (string.IsNullOrEmpty(line)) continue;
-            await Response.WriteAsync($"{line}\n\n");
-            await Response.Body.FlushAsync();
+            if (string.IsNullOrWhiteSpace(line) || !line.StartsWith("data:")) continue;
+
+            var data = line["data:".Length..].Trim();
+
+            if (data == "[DONE]")
+                break;
+
+            try
+            {
+                var parsed = JObject.Parse(data);
+                var content = parsed["choices"]?[0]?["delta"]?["content"]?.ToString();
+
+                if (!string.IsNullOrEmpty(content))
+                {
+                    var claudeCompatibleJson = new
+                    {
+                        delta = new
+                        {
+                            text = content
+                        }
+                    };
+
+                    var adaptedLine = "data: " + JsonConvert.SerializeObject(claudeCompatibleJson);
+                    await Response.WriteAsync(adaptedLine + "\n\n");
+                    await Response.Body.FlushAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to parse line: " + line);
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
