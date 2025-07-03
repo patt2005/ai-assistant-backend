@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "gW06zOJ3I3Y=",
+  "dgSpecHash": "Me9dHSyCGng=",
   "success": true,
   "projectFilePath": "/Users/petrugrigor/Documents/ai-assistant-server/ai-assistant-backend/QwenChatBackend.csproj",
   "expectedPackageFiles": [
@@ -24,7 +24,10 @@
     "/Users/petrugrigor/.nuget/packages/system.codedom/7.0.0/system.codedom.7.0.0.nupkg.sha512",
     "/Users/petrugrigor/.nuget/packages/system.diagnostics.diagnosticsource/6.0.1/system.diagnostics.diagnosticsource.6.0.1.nupkg.sha512",
     "/Users/petrugrigor/.nuget/packages/system.management/7.0.2/system.management.7.0.2.nupkg.sha512",
-    "/Users/petrugrigor/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0/system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+    "/Users/petrugrigor/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0/system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "/Users/petrugrigor/.nuget/packages/microsoft.netcore.app.ref/8.0.16/microsoft.netcore.app.ref.8.0.16.nupkg.sha512",
+    "/Users/petrugrigor/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.16/microsoft.aspnetcore.app.ref.8.0.16.nupkg.sha512",
+    "/Users/petrugrigor/.nuget/packages/microsoft.netcore.app.host.osx-arm64/8.0.16/microsoft.netcore.app.host.osx-arm64.8.0.16.nupkg.sha512"
   ],
   "logs": []
 }
