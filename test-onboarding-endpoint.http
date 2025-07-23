@@ -1,2 +1,0 @@
-### Test Onboarding Variant Endpoint
-GET http://localhost:5000/api/onboarding/variant

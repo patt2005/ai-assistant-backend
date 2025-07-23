@@ -1,7 +1,0 @@
-### Get Base URL Configuration
-GET {{host}}/api/config/base-url
-Content-Type: application/json
-
-### Variables (update host as needed)
-# @host = https://localhost:7000
-# @host = http://localhost:5000
