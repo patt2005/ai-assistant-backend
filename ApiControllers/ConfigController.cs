@@ -11,7 +11,7 @@ public class ConfigController : ControllerBase
     [HttpGet("base-url")]
     public async Task<IActionResult> GetBaseUrl()
     {
-        var baseUrl = "https://veo3-backend-felician-301681342413.europe-west1.run.app";
+        var baseUrl = "https://veo3-backend-felician-301681342413.us-west1.run.app";
 
         var response = new
         {
