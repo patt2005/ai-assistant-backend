@@ -26,7 +26,7 @@ public class OnboardingController : ControllerBase
 
         var response = new
         {
-            onboarding_variant = "C"
+            onboarding_variant = "B"
         };
 
         return Ok(response);
