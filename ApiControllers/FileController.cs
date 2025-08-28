@@ -8,12 +8,12 @@ namespace QwenChatBackend.ApiControllers;
 [Route("api/file")]
 public class FileController : ControllerBase
 {
-    private readonly string _bucketName = "ai-assistant-macos-app";
+    private readonly string _bucketName = "ai-assistant-backend-bucket";
     private readonly GoogleCredential _credential;
 
     public FileController()
     {
-        var authJson = Environment.GetEnvironmentVariable("GCPStorageAuthFile") ?? "";
+        var authJson = Environment.GetEnvironmentVariable("StorageAuthFile") ?? "";
         _credential = GoogleCredential.FromJson(authJson);
     }
     
